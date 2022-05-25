@@ -9,6 +9,7 @@ import { once as onceFn } from 'vs/base/common/functional';
 import { combinedDisposable, Disposable, DisposableStore, IDisposable, SafeDisposable, toDisposable } from 'vs/base/common/lifecycle';
 import { LinkedList } from 'vs/base/common/linkedList';
 import { StopWatch } from 'vs/base/common/stopwatch';
+import { Log } from 'vs/base/common/log';
 
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ export namespace Event {
 			let count = 0;
 			options.onListenerDidAdd = () => {
 				if (++count === 2) {
-					console.warn('snapshotted emitter LIKELY used public and SHOULD HAVE BEEN created with DisposableStore. snapshotted here');
+					Log.warn('snapshotted emitter LIKELY used public and SHOULD HAVE BEEN created with DisposableStore. snapshotted here');
 					stack.print();
 				}
 				origListenerDidAdd?.();
