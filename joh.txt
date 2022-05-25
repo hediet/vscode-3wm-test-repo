@@ -1,6 +1,7 @@
 Zürich
 Bern
-Basel
+Basel (FCB)
 Chur
 Genf
 Thun
+function f(a:number) {}
