@@ -1,6 +1,7 @@
 Zürich
 Bern
-Basel
 Chur
+Davos
 Genf
 Thun
+function f(b:boolean) {}
