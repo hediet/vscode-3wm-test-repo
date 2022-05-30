@@ -11,6 +11,7 @@ import { parseDocument } from 'vs/editor/common/model/bracketPairsTextModelPart/
 import { DenseKeyProvider } from 'vs/editor/common/model/bracketPairsTextModelPart/bracketPairsTree/smallImmutableSet';
 import { ITokenizerSource, TextBufferTokenizer } from 'vs/editor/common/model/bracketPairsTextModelPart/bracketPairsTree/tokenizer';
 import { IViewLineTokens } from 'vs/editor/common/tokens/lineTokens';
+import { Log } from 'log';
 
 export function fixBracketsInLine(tokens: IViewLineTokens, languageConfigurationService: ILanguageConfigurationService): string {
     const denseKeyProvider = new DenseKeyProvider<string>();
@@ -25,6 +26,8 @@ export function fixBracketsInLine(tokens: IViewLineTokens, languageConfiguration
 
     let str = '';
     const line = tokens.getLineContent();
+
+    Log.log('start processing');
 
     function processNode(node: AstNode, offset: Length) {
         if (node.kind === AstNodeKind.Pair) {
@@ -64,6 +67,30 @@ export function fixBracketsInLine(tokens: IViewLineTokens, languageConfiguration
     return str;
 }
 
+class LoggingTokenizerSource implements ITokenizerSource {
+    private _tokens: IViewLineTokens[];
+    private _index: number;
+
+    constructor(tokens: IViewLineTokens[]) {
+        Log.log(tokens);
+        this._tokens = tokens;
+        this._index = 0;
+    }
+
+    public get(index: number): IViewLineTokens {
+        return this._tokens[this._index];
+    }
+
+    public eos(): boolean {
+        return this._index >= this._tokens.length;
+    }
+
+    public next(): IViewLineTokens {
+        this._index++;
+        return this._tokens[this._index];
+    }
+}
+
 class StaticTokenizerSource implements ITokenizerSource {
     constructor(private readonly lines: IViewLineTokens[]) { }
 
@@ -86,4 +113,5 @@ class StaticTokenizerSource implements ITokenizerSource {
 
 export const includes = [
     { name: 'foo', },
+    { name: 'Logging', },
 ];
